@@ -1,0 +1,57 @@
+--Tela de Usuario
+
+CREATE TABLE tb_usuario(
+     id serial NOT NULL, 
+	 nome varchar NULL,
+     email varchar NULL, --Login (email)
+     definicao varchar NULL,  -- 'Cliente'  ou 'Administrador'
+     cnpj varchar NULL,
+     cpf varchar NULL,
+     telefone varchar NULL,
+     cep varchar NULL,
+     endereco varchar NULL,
+     nro varchar NULL,
+     bairro varchar NULL,
+	 senha varchar NULL,  --Login (Senha)
+	 confirmar_senha varchar NULL, -- Validação de senha
+	 CONSTRAINT tb_cadastro_pkey PRIMARY KEY (id)
+);
+CREATE INDEX idx_tb_usuario_pkey ON tb_usuario (id);
+
+--Tabela de serviços e insumos disponíves e cadastrados pelo Admin
+
+CREATE TABLE tb_servico( 
+	 nome varchar NULL,
+	 insumo varchar NULL,
+ 	 CONSTRAINT tb_servico_pkey PRIMARY KEY (nome, insumo)
+);
+CREATE INDEX idx_tb_servico ON tb_servico (nome);
+
+--Tabela de funcionarios cadastrados pelo Admin
+
+CREATE TABLE tb_funcionario(
+     id serial NOT NULL,
+	 nome varchar NULL,
+	 area_de_atuacao varchar NULL,
+     especialidade varchar NULL, -- Insumo
+     CONSTRAINT tb_funcionario_pkey PRIMARY KEY (id),
+	 CONSTRAINT tb_funcionario_fkey FOREIGN KEY (area_de_atuacao, especialidade) REFERENCES tb_servico (nome, insumo)
+);
+CREATE INDEX idx_tb_funcionario ON tb_funcionario (id);
+
+--Tabela de atendimento, que referencia a data, o horário, o funcionário, o serviço e o insumo, conforme necessidades do agendamento do usuário.
+
+CREATE TABLE tb_atendimento(
+     id serial NOT NULL, 
+	 atividade varchar NULL, -- Nome do servico
+     insumo varchar NULL, -- Insumo
+	 id_funcionario int NULL,
+	 data_agendada timestamp, -- YYYY-MM-DD HH:MM:SS
+	 status varchar NULL, --Concluido ou Pendente
+	 comentario varchar NULL,
+	 -- imagem tipo de arquivo com function em bloob (verificar)
+     CONSTRAINT tb_atendimento_pkey PRIMARY KEY (id),
+	 CONSTRAINT tb_atendimento_sei_fkey FOREIGN KEY (atividade, insumo) REFERENCES tb_servico (nome, insumo),
+	 CONSTRAINT tb_atendimento_func_fkey FOREIGN KEY (id_funcionario) REFERENCES tb_funcionario (id)
+);
+CREATE INDEX idx_tb_atendimento ON tb_atendimento (id);
