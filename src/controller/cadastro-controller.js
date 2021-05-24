@@ -1,28 +1,28 @@
 var express = require('express')
 var cadastroModel = require('../model/cadastro-model')
-//var cadastroView = require('../view/cadastro-view')
+var cadastroView = require('../view/cadastro-view')
 
 const router = express.Router();
 
 // Retorna todos os usuario Cadastrado 
 const getAll = async (req, res, next) => {
-   //const cadastros = await cadastroModel.selectAll();
-    //if(cadastros) {
-       // const representations = cadastros.map(user_cadast => userView.outbound(user_cadast))
-       // res.status(200).json(representations);
-        res.status(200).json(cadastroModel.findAll());
+   const cadastros = await cadastroModel.selectAll();
+    if(cadastros) {
+        const representations = cadastros.map(user_cadast => cadastroView.outbound(user_cadast))
+        res.status(200).json(representations);
+        //res.status(200).json(cadastroModel.findAll());
         return;
-   // }
-   // res.status(200).json(cadastroModel.findAll());
+    }
+    res.status(200).json([]);
 }
 
 // apresenta dados do usuario  pelo  (ID) solicitado 
 const get = async (req, res, next) => {
     const { id } = req.params;
-    const usuario_cadastrado = await cadastroModel.getOne(id);
+    const usuario_cadastrado = await cadastroModel.selectAll(id);
     if (usuario_cadastrado) {
-       // const representation = userView.outbound(cadastros);
-        res.status(200).json(usuario_cadastrado);
+        const representation = cadastroView.outbound(usuario_cadastrado);
+        res.status(200).json(representation);
         return;
     }
     res.status(404).json({ message: 'not found' });

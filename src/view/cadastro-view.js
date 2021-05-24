@@ -1,17 +1,17 @@
-outbound = (cadastro) => {
+outbound = (usuario) => {
     const representation = {
-        identifier: cadastro.id,
-        personalEmail: cadastro.email,
+        identifier: usuario.id,
+        personalEmail: usuario.email,
     }
     return representation;
 }
 
 inbound = (representation) => {
-    const cadastro = {
+    const usuario = {
         id: representation.identifier,
         email: representation.personalEmail,
     }
-    return cadastro;
+    return usuario;
 }
 
 module.exports = {

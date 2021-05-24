@@ -1,43 +1,40 @@
-usuarios_cadastrados = [
-    {
-        id: 1,
-        email: "malopes21@gmail.com"
-    },
-    {
-        id: 2,
-        email: "fulano@gmail.com"
-    },
-    {
-        id: 3,
-        email: "sicrano@gmail.com"
+const {pool} = require('../pgadmin')
+
+selectAll = async () => {
+    const res = await pool.query('select * from tb_usuario');
+    return res.rows;
+}
+
+selectOne = async (id) => {
+    const res = await pool.query('select * from td_usuario where id = $1', [id]);
+    if(res.rowCount === 0) {
+        return;
     }
-]
-findAll = () => {
-    return usuarios_cadastrados.filter(usuario => usuario.id = usuario.id);
+    return res.rows[0];
 }
 
-getOne = (id) => {
-    const usuarioFinded = usuarios_cadastrados.find(usuario => usuario.id == id);
-    return usuarioFinded;
-}
-
-create = (usuario) => {
+insert = (usuario) => {
     const findedUsuario = getOne(usuario.id);
     if (findedUsuario) {
         throw 'usuario with id already exist';
     }
-    usuarios_cadastrados.push(usuario);
+    const res = await 
+    pool.query('insert into td_usuario (id, nome, email, definicao, cnpj, telefone, cep, endereco, nro, bairro, senha, confirmar_senha) values ($1, $2)',
+     [usuario.id, usuario.nome, usuario.email, usuario.definicao, usuario.cnpj, usuario.telefone, usuario.cep, usuario.endereco, usuario.nro, usuario.bairro, usuario.senha, usuario.confirmar_senha]);
 }
 
 update = (usuario) => {
     const findedUsuario = getOne(usuario.id);
     if (!findedUsuario) {
-        throw 'usuario with id dont exist';
+        throw 'usuario with id dont exist  ';
     }
-    findedUsuario.email = usuario.email;
+    const re
+    findedUsuario.nome = usuario.nome, email = usuario.email, definicao = usuario.definicao, cnpj = usuario.cnpj, 
+                telefone = usuario.telefone, cep = usuario.cep, endereco = usuario.endereco, nro = usuario.nro,
+                bairro = usuario.bairro, senha = usuario.senha, confirmar_senha = usuario.confirmar_senha ;
 }
 
-remove = (id) => {
+deleteOne = (id) => {
     const findedUsuario = getOne(id);
     if (!findedUsuario) {
         throw 'user with id dont exist';
@@ -45,11 +42,11 @@ remove = (id) => {
     usuarios_cadastrados = usuarios_cadastrados.filter(elem => elem.id != id);
 }
 module.exports = {
-    findAll: findAll,
-    getOne: getOne,
-    create: create,
+    selectAll: selectAll,
+    selectOne: selectOne,
+    insert: insert,
     update: update,
-    remove: remove,
+    deleteOne: deleteOne
 }
 
 
