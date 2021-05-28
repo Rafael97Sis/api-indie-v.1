@@ -42,9 +42,13 @@ const create = async (req, res) => {
 //    // update atualiza dados do cadastro
    const update = (req, res) => {
     const {id} = req.params;
+    const {nome} = req.params;
     const {email} = req.body;
     try {
-    cadastroModel.update({id:id, email: email});
+    const usuarios = cadastroView.inbound({id, nome, email, definicao,
+    cnpj, cpf, telefone, cep, endereco, nro, bairro, senha, confirmar_senha})
+    
+    cadastroModel.update(usuarios);
     res.status(200).json({message: 'user updated'});
     } catch (e) {
     res.status(500).json({message: e});
@@ -54,7 +58,7 @@ const create = async (req, res) => {
    const remove = (req, res) => {
     const {id} = req.params;
     try {
-    cadastroModel.remove(id);
+    cadastroModel.deleteOne(id);
     res.status(200).json({message: 'user removed'});
     } catch (e) {
     res.status(500).json({message: e});

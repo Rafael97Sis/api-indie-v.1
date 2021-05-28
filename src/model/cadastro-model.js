@@ -26,22 +26,23 @@ create = async (usuario) => {
 
 
 update = async (usuario) => {
-    try {
-        const findedUsuario = getOne(usuario.id);
-        const res = await pool.query('update td_usuario set nome = $2  where id = $1')
-    } catch (e) {
-        throw 'usuario with id dont exist  ';
+    const findedUsuario = getOne(usuario.id);
+
+    if (!findedUsuario) {
+        throw 'cat with nome dont exist';
+    }
+    findedUsuario.id = usuario.id;
+    const res = await pool.query('update td_usuario set nome = $2  where id = $1' , [usuario.id, usuario.nome] )
     }
 
 
-}
-
-deleteOne = (id) => {
+deleteOne = async (id) => {
     const findedUsuario = getOne(id);
     if (!findedUsuario) {
         throw 'user with id dont exist';
     }
-    usuarios_cadastrados = usuarios_cadastrados.filter(elem => elem.id != id);
+    //usuarios_cadastrados = usuarios_cadastrados.filter(elem => elem.id != id);
+    const res = await pool.query('delete from categoria where id = $1', [id]);
 }
 
 module.exports = {
