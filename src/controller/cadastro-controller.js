@@ -6,11 +6,10 @@ const router = express.Router();
 
 // Retorna todos os usuario Cadastrado 
 const getAll = async (req, res, next) => {
-   const cadastros = await cadastroModel.selectAll();
-    if(cadastros) {
-        const representations = cadastros.map(user_cadast => cadastroView.outbound(user_cadast))
+   const usuarios = await cadastroModel.selectAll();
+    if(usuarios) {
+        const representations = usuarios.map(u => cadastroView.outbound(u))
         res.status(200).json(representations);
-        //res.status(200).json(cadastroModel.findAll());
         return;
     }
     res.status(200).json([]);
@@ -19,9 +18,9 @@ const getAll = async (req, res, next) => {
 // apresenta dados do usuario  pelo  (ID) solicitado 
 const get = async (req, res, next) => {
     const { id } = req.params;
-    const usuario_cadastrado = await cadastroModel.selectAll(id);
-    if (usuario_cadastrado) {
-        const representation = cadastroView.outbound(usuario_cadastrado);
+    const usuarios = await cadastroModel.selectAll(id);
+    if (usuarios) {
+        const representation = cadastroView.outbound(usuarios);
         res.status(200).json(representation);
         return;
     }
@@ -29,17 +28,18 @@ const get = async (req, res, next) => {
 }
 
 // Gera usuario 
-const create = (req, res) => {
-    const {id, email} = req.body;
+const create = async (req, res) => {
+    const {id ,nome, email, definicao, cnpj, telefone, cep, endereco, nro, bairro, senha, confirmar_senha } = req.body;
     try {
-    const userioCreated = cadastroModel.create({id:id, email: email});
-    res.status(200).json({message: 'user created'});
+    //const usuarios = cadastroModel.create({id, email, nome});
+    const usuarioCreated = await cadastroModel.insert({id ,nome, email, definicao, cnpj, telefone, cep, endereco, nro, bairro, senha, confirmar_senha});
+    res.status(200).json({message: 'usuario  created'});
     } catch (e) {
     res.status(500).json({message: e});
     }
    }
 
-   // update atualiza dados do cadastro
+//    // update atualiza dados do cadastro
    const update = (req, res) => {
     const {id} = req.params;
     const {email} = req.body;
