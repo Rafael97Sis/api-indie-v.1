@@ -1,10 +1,12 @@
 const { pool } = require('../pgadmin')
 
+// Retorna os dados do banco da Tabela - TB_USUARIO
 selectAll = async () => {
     const res = await pool.query('select * from tb_usuario  ');
     return res.rows;
 }
 
+// RETORNA os dados do ID Solicitado.
 selectOne = async (id) => {
     const res = await pool.query('select * from tb_usuario where id = $1', [id]);
     if (res.rowCount === 0) {
@@ -13,20 +15,20 @@ selectOne = async (id) => {
     return res.rows[0];
 }
 
+// cadastra usuario
 create = async (usuario) => {
-        const findedUsuario = await getOne(usuario.id);
+        const findedUsuario = await getOne(usuario.nome);
         if(findedUsuario){ 
         throw 'user with id already exist';
         }
-        const res = await pool.query
-        ('insert into tb_usuario (nome, email, definicao, cnpj, telefone, cep, endereco, nro, bairro, senha, confirmar_senha) values ($1, $2 , $3, $4, $5, $6, $7, $8, $9, $10, $11)',
-        [usuario.nome, usuario.email, usuario.definicao, usuario.cnpj, usuario.telefone, usuario.cep,
-                usuario.endereco, usuario.nro, usuario.bairro, usuario.senha, usuario.confirmar_senha]);
+        const res = await pool.query('insert into tb_usuario (nome) values ($1)', [usuario.nome]);
+    // const res = await pool.query('insert into tb_usuario (nome, email, definicao, cnpj, cpf, telefone, cep, endereco, nro, bairro, senha, confirmar_senha) values ($1, $2 , $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
+    // [usuario.nome, usuario.email, usuario.definicao, usuario.cnpj, usuario.telefone, usuario.cep, usuario.endereco, usuario.nro, usuario.bairro, usuario.senha, usuario.confirmar_senha]);
     }
 
 
 update = async (usuario) => {
-    const findedUsuario = getOne(usuario.id);
+    const findedUsuario = selectByNome(usuario.id, usuario.nome);
 
     if (!findedUsuario) {
         throw 'cat with nome dont exist';
