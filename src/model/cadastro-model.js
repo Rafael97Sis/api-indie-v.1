@@ -15,44 +15,77 @@ selectOne = async (id) => {
     return res.rows[0];
 }
 
+
+
+selectByNome = async (nome) => {
+    const res = await pool.query('select * from categoria where nome = $1', [nome]);
+    if(res.rowCount === 0) {
+        return;
+    }
+    return res.rows[0];
+}
+
+
+validaEmail = async ( email ) => {
+    const res = await pool.query('select * from tb_usuario where email=$1 ', [email]);
+    if(res.rowCount === 0) {
+        return;
+    }
+    return res.rows[0];
+}
+
 // cadastra usuario
-create = async (usuario) => {
-        const findedUsuario = await getOne(usuario.nome);
-        if(findedUsuario){ 
-        throw 'user with id already exist';
+insert = async (usuario) => {
+         const findedUsuario = await validaEmail(usuario.email);
+         if(findedUsuario){ 
+         throw 'user with id already exist - Usuario Já Consta ';
         }
-        const res = await pool.query('insert into tb_usuario (nome) values ($1)', [usuario.nome]);
-    // const res = await pool.query('insert into tb_usuario (nome, email, definicao, cnpj, cpf, telefone, cep, endereco, nro, bairro, senha, confirmar_senha) values ($1, $2 , $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
+        const res = await pool.query('insert into tb_usuario (nome, email, definicao, cnpj, cpf, telefone, cep, endereco, nro, bairro, senha, confirmar_senha) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12);', [usuario.nome, usuario.email, usuario.definicao, usuario.cnpj, usuario.cpf, 
+        usuario.telefone, usuario.cep, usuario.endereco, usuario.nro, usuario.bairro, usuario.senha, usuario.confirmar_senha ]);
+     //const res = await pool.query('insert into tb_usuario (nome, email, definicao, cnpj, cpf, telefone, cep, endereco, nro, bairro, senha, confirmar_senha) values ($1, $2 , $3, $4, $5, $6, $7, $8, $9, $10, $11)',
     // [usuario.nome, usuario.email, usuario.definicao, usuario.cnpj, usuario.telefone, usuario.cep, usuario.endereco, usuario.nro, usuario.bairro, usuario.senha, usuario.confirmar_senha]);
     }
 
 
 update = async (usuario) => {
-    const findedUsuario = selectByNome(usuario.id, usuario.nome);
+    const findedUsuario = selectByNome(usuario.id, usuario.email);
 
     if (!findedUsuario) {
         throw 'cat with nome dont exist';
     }
     findedUsuario.id = usuario.id;
-    const res = await pool.query('update td_usuario set nome = $2  where id = $1' , [usuario.id, usuario.nome] )
+    const res = await pool.query('update td_usuario set email = $2  where id = $1' , [usuario.id, usuario.email] )
     }
 
-
+//Deleta Usuario Selecionado 
 deleteOne = async (id) => {
-    const findedUsuario = getOne(id);
+    const findedUsuario = selectOne(id);
     if (!findedUsuario) {
         throw 'user with id dont exist';
     }
     //usuarios_cadastrados = usuarios_cadastrados.filter(elem => elem.id != id);
-    const res = await pool.query('delete from categoria where id = $1', [id]);
+    const res = await pool.query('delete from tb_usuario where id = $1', [id]);
+}
+
+
+
+//Deleta Usuario Selecionado 
+deleteUsuarioEmail = async (email) => {
+    const findedUsuario = selectEmail(email);
+    if (!findedUsuario) {
+        throw 'user with id dont exist';
+    }
+    const res = await pool.query('delete from tb_usuario where email = $1', [email]);
 }
 
 module.exports = {
     selectAll: selectAll,
     selectOne: selectOne,
-    create: create,
+    validaEmail: validaEmail,
+    insert: insert,
     update: update,
-    deleteOne: deleteOne
+    deleteOne: deleteOne,
+    deleteUsuarioEmail: deleteUsuarioEmail,
 }
 
 
