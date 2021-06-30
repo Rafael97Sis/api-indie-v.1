@@ -93,14 +93,14 @@ const login = async (req, res, next ) => {
             const token = jwt.sign({ id: user.id }, process.env.SECRET, {
                 expiresIn: 3000 // expires in 50 min
             });
-            res.status(200).json({message: "ok" , token:token});
+            res.status(200).json({message: "ok" , token:token, definicao:user.definicao });
             return;
         }
         res.status(401).json({message: 'Nao autorizado 401 '})
 }
 
 router
-    .get("/cadastros",SecurityUtils.verifyJWT ,getAll)
+    .get("/cadastros" ,getAll)
     .get("/cadastros/:id",SecurityUtils.verifyJWT , get)
     .post("/cadastra", create)
     .post("/cadastro/login", login)
