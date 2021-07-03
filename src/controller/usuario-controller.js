@@ -1,5 +1,5 @@
 var express = require('express')
-var cadastroModel = require('../model/cadastro-model')
+var cadastroModel = require('../model/usuario-model')
 var SecurityUtils = require('../security/SecurityUtils')
 
 require("dotenv-safe").config();
@@ -17,8 +17,6 @@ const getAll = async (req, res, next) => {
     res.status(200).json([]);
 }
 
-
-
 // apresenta dados do usuario  pelo  (ID) solicitado 
 const get = async (req, res, next) => {
     const { id } = req.params;
@@ -30,14 +28,12 @@ const get = async (req, res, next) => {
     res.status(404).json({ message: 'not found & id nao Existe ' });
 }
 
-
-
 // Gera usuario 
 const create = async (req, res) => {
-    const {nome, email, definicao, cnpj, cpf, telefone_user, cep, endereco, nro, bairro, senha, confirmar_senha } = req.body;
+    const {nome, email, definicao, cpf_ou_cnpj, telefone, cep, endereco, nro, bairro, senha, area_de_atuacao, especialidade } = req.body;
    //const {nome,email} = req.body;
     try {
-        const cadastradoCreated = await cadastroModel.insert ({nome,email,definicao,cnpj,cpf,telefone_user,cep,endereco,nro,bairro,senha,confirmar_senha });
+        const cadastradoCreated = await cadastroModel.insert ({nome, email, definicao, cpf_ou_cnpj, telefone, cep, endereco, nro, bairro, senha, area_de_atuacao, especialidade });
 
         res.status(200).json({ message: 'usuario  created - Gerado' || cadastradoCreated });
     } catch (e) {
@@ -100,12 +96,12 @@ const login = async (req, res, next ) => {
 }
 
 router
-    .get("/cadastros" ,getAll)
-    .get("/cadastros/:id",SecurityUtils.verifyJWT , get)
-    .post("/cadastra", create)
-    .post("/cadastro/login", login)
-    .put("/cadastros/:id", update)
-    .delete("/cadastros/:id", remove)
-    .delete("/cadastros/email/:email", removemail);
+    .get("/usuario" ,getAll)
+    .get("/usuario/:id",SecurityUtils.verifyJWT , get)
+    .post("/usuario", create)
+    .post("/usuario/login", login)
+    .put("/usuario/:id", update)
+    .delete("/usuario/:id", remove)
+    .delete("/usuario/email/:email", removemail);
 
 module.exports = router;

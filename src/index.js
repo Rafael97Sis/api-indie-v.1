@@ -4,7 +4,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 
-var cadastroController = require('./controller/cadastro-controller')
+var usuarioController = require('./controller/usuario-controller')
+var atendimentoController = require('./controller/atendimento-controller');
+const servicoController = require('./controller/servico-controller');
 //var login = require ('./controller/login-controller');
 
 
@@ -14,8 +16,9 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors());
 app.use(morgan('dev'));
 
-app.use(cadastroController);
-//app.use(ca)
+app.use(usuarioController);
+app.use(atendimentoController);
+app.use(servicoController);
 //app.use(login);
 
 app.use((req, res, next) => {

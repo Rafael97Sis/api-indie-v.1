@@ -16,7 +16,7 @@ selectOne = async (id) => {
 }
 
 
-
+// valida nome 
 selectByNome = async (nome) => {
     const res = await pool.query('select * from categoria where nome = $1', [nome]);
     if(res.rowCount === 0) {
@@ -40,11 +40,12 @@ insert = async (usuario) => {
          if(findedUsuario){ 
          throw 'user with id already exist - Usuario Já Consta ';
         }
-        const res = await pool.query('insert into tb_usuario (nome, email, definicao, cnpj, cpf, telefone, cep, endereco, nro, bairro, senha, confirmar_senha) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12);', [usuario.nome, usuario.email, usuario.definicao, usuario.cnpj, usuario.cpf, 
-        usuario.telefone, usuario.cep, usuario.endereco, usuario.nro, usuario.bairro, usuario.senha, usuario.confirmar_senha ]);
+        const res = await pool.query('insert into tb_usuario (nome, email, definicao, cpf_ou_cnpj, telefone, cep, endereco, nro, bairro, senha, area_de_atuacao, especialidade ) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12);', [usuario.nome, usuario.email, usuario.definicao, usuario.cpf_ou_cnpj, usuario.telefone, usuario.cep, usuario.endereco, usuario.nro, usuario.bairro, usuario.senha, usuario.area_de_atuacao, usuario.especialidade ]);
      //const res = await pool.query('insert into tb_usuario (nome, email, definicao, cnpj, cpf, telefone, cep, endereco, nro, bairro, senha, confirmar_senha) values ($1, $2 , $3, $4, $5, $6, $7, $8, $9, $10, $11)',
     // [usuario.nome, usuario.email, usuario.definicao, usuario.cnpj, usuario.telefone, usuario.cep, usuario.endereco, usuario.nro, usuario.bairro, usuario.senha, usuario.confirmar_senha]);
     }
+
+    
 
 
 update = async (usuario) => {
