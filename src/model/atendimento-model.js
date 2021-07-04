@@ -26,6 +26,16 @@ insertAtendimento = async (atendimento) => {
 
 }
 
+update = async (usuario) => {
+    const findedUsuario = selectByNome(usuario.id, usuario.email);
+
+    if (!findedUsuario) {
+        throw 'cat with nome dont exist';
+    }
+    findedUsuario.id = usuario.id;
+    const res = await pool.query('update td_usuario set email = $2  where id = $1' , [usuario.id, usuario.email] )
+    }
+
 module.exports = {
     insertAtendimento: insertAtendimento,
     selectAll:selectAll,

@@ -19,7 +19,7 @@ app.use(morgan('dev'));
 app.use(usuarioController);
 app.use(atendimentoController);
 app.use(servicoController);
-//app.use(login);
+
 
 app.use((req, res, next) => {
     const erro =  new Error ("Não Encontrado");
