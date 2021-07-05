@@ -44,23 +44,17 @@ const createAtendimento = async (req, res) => {
 
 
 //    // update atualiza dados do cadastro
-const update = (req, res) => {
-    const { id } = req.params;
-    const { nome } = req.params;
-    const { email } = req.body;
-    try {
-        const usuarios = cadastroView.inbound({
-            id, nome, email, definicao,
-            cnpj, cpf, telefone, cep, endereco, 
-            nro, bairro, senha, confirmar_senha
-        })
-
-        cadastroModel.update(usuarios);
-        res.status(200).json({ message: 'user updated' });
-    } catch (e) {
-        res.status(500).json({ message: e });
-    }
-}
+// const update = (req, res) => {
+//     const { id } = req.params;
+//     const { nome } = req.params;
+//     const { email } = req.body;
+//     try {
+//          await atendimentoModel.update({id , nome , email });
+//         res.status(200).json({ message: 'user updated' });
+//     } catch (e) {
+//         res.status(500).json({ message: e });
+//     }
+// }
 
 
 router
@@ -68,7 +62,7 @@ router
     // .get("/atendimento/:id",SecurityUtils.verifyJWT , get)
     .post("/atendimento", createAtendimento)
     // .post("/atendimento/login", login)
-    .put("/atendimento/:id", update)
+    // .put("/atendimento/:id", update)
     // .delete("/atendimento/:id", remove)
     // .delete("/atendimento/email/:email", removemail);
 

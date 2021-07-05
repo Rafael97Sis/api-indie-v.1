@@ -7,6 +7,25 @@ solicita_servico = async () => {
 }
 
 // valida servico
+buscaServico = async ( nome ) => {
+    const res = await pool.query('select nome , insumo  from tb_servico where nome=$1 ', [nome]);
+    if(res.rowCount === 0) {
+        return;
+    }
+    return res.rows[0];
+}
+
+selectOne = async (nome) => {
+    const res = await pool.query('select * from tb_servico where nome=$1', [nome]);
+    if (res.rowCount === 0) {
+        return;
+    }
+    return res.rows[0];
+}
+
+
+
+// valida servico
 validaServico = async ( nome ) => {
     const res = await pool.query('select * from tb_servico where nome=$1 ', [nome]);
     if(res.rowCount === 0) {
@@ -29,5 +48,7 @@ insert = async (servico) => {
 module.exports = {
     solicita_servico: solicita_servico,
     validaServico: validaServico,
-    insert: insert
+    insert: insert,
+    buscaServico:buscaServico,
+    selectOne: selectOne
 }

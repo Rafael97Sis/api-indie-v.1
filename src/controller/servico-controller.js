@@ -17,15 +17,26 @@ const getAll = async (req, res, next) => {
     res.status(200).json([]);
 }
 
-// apresenta dados do usuario  pelo  (ID) solicitado 
-const get = async (req, res, next) => {
-    const { id } = req.params;
-    const usuarios = await servicoModel.selectOne(id);
-    if (usuarios) {
-        res.status(200).json(usuarios);
+// apresenta dados do usuario  por  (nome) solicitado 
+const getServico = async (req, res, next) => {
+    const { nome } = req.params;
+    const servico = await servicoModel.buscaServico(nome);
+    if (servico) {
+        res.status(200).json(servico);
         return;
     }
-    res.status(404).json({ message: 'not found & id nao Existe ' });
+    res.status(404).json({ message: 'not found & servico nao Existe ' });
+}
+
+// apresenta dados do usuario  pelo  (ID) solicitado 
+const get = async (req, res, next) => {
+    const { nome } = req.params;
+    const servico = await servicoModel.selectOne(nome);
+    if (servico) {
+        res.status(200).json(servico);
+        return;
+    }
+    res.status(404).json({ message: 'not found & servico nao Existe ' });
 }
 
 // Cria servico 
@@ -40,11 +51,17 @@ const createServico = async (req, res) => {
     }
 }
 
+const deleteServico = async ( req, res) => {
+
+}
 
 router
     
-    .get("/servico/:id", get)
+    .get("/servico", get)
     .post("/servico", createServico)
-    .get("/servico", getAll)
+    .get("/servico/:nome", getAll)
+    .get("/servico/servico/:nome", getServico)
+    .delete("/servico", deleteServico)
+    
     
 module.exports = router;
