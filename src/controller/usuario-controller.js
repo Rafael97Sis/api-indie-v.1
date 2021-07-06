@@ -32,7 +32,7 @@ const getUsuario = async (req, res, next) => {
 // apresenta dados do usuario  pelo  (ID) solicitado 
 const getProfissional = async (req, res, next) => {
     const { definicao } = req.params;
-    const usuarios = await cadastroModel.buscaProfissional (definicao);
+    const usuarios = await cadastroModel.buscaProfissional(definicao);
     if (usuarios) {
         res.status(200).json(usuarios);
         return;
@@ -53,14 +53,14 @@ const get = async (req, res, next) => {
 
 // Gera usuario 
 const create = async (req, res) => {
-    const {nome, email, definicao, cpf_ou_cnpj, telefone, cep, endereco, nro, bairro, senha, area_de_atuacao, especialidade } = req.body;
-   //const {nome,email} = req.body;
+    const { nome = null, email = null, definicao = null, cpf_ou_cnpj = null, telefone = null, cep = null, endereco = null, nro = null, bairro = null, senha = null, area_de_atuacao = null, especialidade = null } = req.body;
+    //const {nome,email} = req.body;
+    console.log("req.body", req.body)
     try {
-        const cadastradoCreated = await cadastroModel.insert ({nome, email, definicao, cpf_ou_cnpj, telefone, cep, endereco, nro, bairro, senha, area_de_atuacao, especialidade });
-
+        const cadastradoCreated = await cadastroModel.insert({ nome, email, definicao, cpf_ou_cnpj, telefone, cep, endereco, nro, bairro, senha, area_de_atuacao, especialidade });
         res.status(200).json({ message: 'usuario  created - Gerado' || cadastradoCreated });
     } catch (e) {
-        res.status(500).json({ message:  'Erro - Usuario Já Consta'||  e });
+        res.status(500).json({ message: 'Erro - Usuario Já Consta' || e });
     }
 }
 
@@ -72,7 +72,7 @@ const update = (req, res) => {
     try {
         const usuarios = cadastroView.inbound({
             id, nome, email, definicao,
-            cnpj, cpf, telefone, cep, endereco, 
+            cnpj, cpf, telefone, cep, endereco,
             nro, bairro, senha, confirmar_senha
         })
 
@@ -104,29 +104,29 @@ const removemail = (req, res) => {
 }
 
 // realiza login e validacao do usuario 
-const login = async (req, res, next ) => {
-    const {email, senha } = req.body;
+const login = async (req, res, next) => {
+    const { email, senha } = req.body;
     const user = await cadastroModel.validaEmail(email);
-        if (user && user.senha === senha){
-            //aqui JWT
-            const token = jwt.sign({ id: user.id }, process.env.SECRET, {
-                expiresIn: 3000 // expires in 50 min
-            });
-            res.status(200).json({message: "ok" , token:token, definicao:user.definicao });
-            return;
-        }
-        res.status(401).json({message: 'Nao autorizado 401 '})
+    if (user && user.senha === senha) {
+        //aqui JWT
+        const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+            expiresIn: 3000 // expires in 50 min
+        });
+        res.status(200).json({ message: "ok", token: token, definicao: user.definicao });
+        return;
+    }
+    res.status(401).json({ message: 'Nao autorizado 401 ' })
 }
 
 router
-    .get("/usuario/2" ,getAll)
-    .get("/usuario/:id",SecurityUtils.verifyJWT , get)
+    .get("/usuario", getAll)
+    .get("/usuario/:id", SecurityUtils.verifyJWT, get)
     .post("/usuario", create)
-    // .post("/usuario/login", login)
-    // .put("/usuario/:id", update)
-    // .delete("/usuario/:id", remove)
-    // .delete("/usuario/email/:email", removemail)
-    // .get("/usuario/profissional/:definicao", getProfissional)
-    
+    .post("/usuario/login", login)
+// .put("/usuario/:id", update)
+// .delete("/usuario/:id", remove)
+// .delete("/usuario/email/:email", removemail)
+// .get("/usuario/profissional/:definicao", getProfissional)
+
 
 module.exports = router;

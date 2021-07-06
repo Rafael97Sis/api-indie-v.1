@@ -43,6 +43,7 @@ validaEmail = async ( email ) => {
 
 // cadastra usuario
 insert = async (usuario) => {
+            //console.log(usuario);
          const findedUsuario = await validaEmail(usuario.email);
          if(findedUsuario){ 
          throw 'user with id already exist - Email Já Consta ';
