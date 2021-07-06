@@ -57,9 +57,9 @@ const deleteServico = async ( req, res) => {
 
 router
     
-    .get("/servico", get)
+    .get("/servico/2", get)
     .post("/servico", createServico)
-    .get("/servico/:nome", getAll)
+    .get("/servico", getAll)
     .get("/servico/servico/:nome", getServico)
     .delete("/servico", deleteServico)
     

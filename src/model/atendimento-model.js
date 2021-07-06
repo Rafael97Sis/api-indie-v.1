@@ -28,20 +28,34 @@ insertAtendimento = async (atendimento) => {
 
 }
 
-// update = async (usuario) => {
-//     const findedUsuario = selectByNome(usuario.id, usuario.email);
+// valida atendimento 
+selectAtendimento= async (id) => {
+    const res = await pool.query('select * from tb_atendimento where id =$1', [id]);
+    if(res.rowCount === 0) {
+        return;
+    }
+    return res.rows[0];
+}
 
-//     if (!findedUsuario) {
-//         throw 'cat with nome dont exist';
-//     }
-//     findedUsuario.id = usuario.id;
-//     const res = await pool.query('update td_usuario set email = $2  where id = $1' , [usuario.id, usuario.email] )
-//     }
+
+updateAtendimento = async (atendimento) => {
+    const findedUsuario = selectAtendimento(atendimento.id);
+
+    if (!findedUsuario) {
+        throw 'cat with nome dont exist';
+    }
+    findedUsuario.id = atendimento.id;
+    const res = await pool.query('update tb_atendimento set atividade = $1, insumo = $2, id_funcionario = $3 , data_agendada = $4, status_atendimento = $5 , comentario = $6 where id = $7 ',
+     [atendimento.atividade, atendimento.insumo, atendimento.id_funcionario, atendimento.data_agendada, atendimento.status_atendimento, atendimento.comentario, atendimento.id ] )
+}
+
+
 
 module.exports = {
     insertAtendimento: insertAtendimento,
     selectAll:selectAll,
     verificaServico: verificaServico,
+    updateAtendimento:updateAtendimento
     // update: update,
     
 }

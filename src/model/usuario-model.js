@@ -15,6 +15,13 @@ selectOne = async (id) => {
     return res.rows[0];
 }
 
+// valida servico
+buscaProfissional = async (definicao ) => {
+    const res = await pool.query('select nome, definicao, area_de_atuacao, especialidade from tb_usuario where definicao= $1', [definicao]);
+
+    return res.rows;
+}
+
 
 // valida nome 
 selectByNome = async (nome) => {
@@ -38,7 +45,7 @@ validaEmail = async ( email ) => {
 insert = async (usuario) => {
          const findedUsuario = await validaEmail(usuario.email);
          if(findedUsuario){ 
-         throw 'user with id already exist - Usuario Já Consta ';
+         throw 'user with id already exist - Email Já Consta ';
         }
         const res = await pool.query('insert into tb_usuario (nome, email, definicao, cpf_ou_cnpj, telefone, cep, endereco, nro, bairro, senha, area_de_atuacao, especialidade ) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12);', [usuario.nome, usuario.email, usuario.definicao, usuario.cpf_ou_cnpj, usuario.telefone, usuario.cep, usuario.endereco, usuario.nro, usuario.bairro, usuario.senha, usuario.area_de_atuacao, usuario.especialidade ]);
      //const res = await pool.query('insert into tb_usuario (nome, email, definicao, cnpj, cpf, telefone, cep, endereco, nro, bairro, senha, confirmar_senha) values ($1, $2 , $3, $4, $5, $6, $7, $8, $9, $10, $11)',
@@ -87,6 +94,7 @@ module.exports = {
     update: update,
     deleteOne: deleteOne,
     deleteUsuarioEmail: deleteUsuarioEmail,
+    buscaProfissional: buscaProfissional 
 }
 
 

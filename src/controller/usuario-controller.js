@@ -17,6 +17,29 @@ const getAll = async (req, res, next) => {
     res.status(200).json([]);
 }
 
+
+// apresenta dados do usuario  por  (nome) solicitado 
+const getUsuario = async (req, res, next) => {
+    const { nome } = req.params;
+    const servico = await servicoModel.buscaServico(nome);
+    if (servico) {
+        res.status(200).json(servico);
+        return;
+    }
+    res.status(404).json({ message: 'not found & servico nao Existe ' });
+}
+
+// apresenta dados do usuario  pelo  (ID) solicitado 
+const getProfissional = async (req, res, next) => {
+    const { definicao } = req.params;
+    const usuarios = await cadastroModel.buscaProfissional (definicao);
+    if (usuarios) {
+        res.status(200).json(usuarios);
+        return;
+    }
+    res.status(404).json({ message: 'not found & id nao Existe ' });
+}
+
 // apresenta dados do usuario  pelo  (ID) solicitado 
 const get = async (req, res, next) => {
     const { id } = req.params;
@@ -96,12 +119,14 @@ const login = async (req, res, next ) => {
 }
 
 router
-    .get("/usuario" ,getAll)
+    .get("/usuario/2" ,getAll)
     .get("/usuario/:id",SecurityUtils.verifyJWT , get)
     .post("/usuario", create)
-    .post("/usuario/login", login)
-    .put("/usuario/:id", update)
-    .delete("/usuario/:id", remove)
-    .delete("/usuario/email/:email", removemail);
+    // .post("/usuario/login", login)
+    // .put("/usuario/:id", update)
+    // .delete("/usuario/:id", remove)
+    // .delete("/usuario/email/:email", removemail)
+    // .get("/usuario/profissional/:definicao", getProfissional)
+    
 
 module.exports = router;
