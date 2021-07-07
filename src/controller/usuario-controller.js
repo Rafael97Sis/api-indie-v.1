@@ -124,7 +124,7 @@ router
     .post("/usuario", create)
     .post("/usuario/login", login)
 // .put("/usuario/:id", update)
-// .delete("/usuario/:id", remove)
+    .delete("/usuario/:id", remove)
 // .delete("/usuario/email/:email", removemail)
 // .get("/usuario/profissional/:definicao", getProfissional)
 

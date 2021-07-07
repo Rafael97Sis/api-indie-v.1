@@ -19,10 +19,11 @@ verificaServico = async ( nome ) => {
 }
 // cadastra usuario
 insertAtendimento = async (atendimento) => {
-   const findedAtendimento = await verificaServico(atendimento.atividade);
-    if(findedAtendimento){ 
-    throw 'user with id already exist - Usuario Já Consta ';
-   }
+//    const findedAtendimento = await verificaServico(atendimento.atividade);
+//    console.log('findedAtendimento',findedAtendimento);
+//     if(findedAtendimento){ 
+//     throw 'user with id already exist - Usuario Já Consta ';
+//    }
    const res = await pool.query('insert into tb_atendimento (atividade, insumo, id_funcionario, data_agendada, status_atendimento, comentario ) values ($1,$2,$3,$4,$5,$6);',
     [atendimento.atividade, atendimento.insumo, atendimento.id_funcionario, atendimento.data_agendada, atendimento.status_atendimento, atendimento.comentario ]);
 
@@ -55,7 +56,8 @@ module.exports = {
     insertAtendimento: insertAtendimento,
     selectAll:selectAll,
     verificaServico: verificaServico,
-    updateAtendimento:updateAtendimento
+    updateAtendimento:updateAtendimento,
+    selectAtendimento:selectAtendimento
     // update: update,
     
 }

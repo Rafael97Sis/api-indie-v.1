@@ -31,24 +31,29 @@ const get = async (req, res, next) => {
 
 // Gera usuario 
 const createAtendimento = async (req, res) => {
-    const {atividade, insumo, id_funcionario, data_agendada, status_atendimento, comentario } = req.body;
+    const { atividade, insumo, id_funcionario, data_agendada, status_atendimento = 'novo', comentario } = req.body;
+
     try {
-        const atendimentoCreated = await atendimentoModel.insertAtendimento ({atividade, insumo, id_funcionario, data_agendada, status_atendimento, comentario });
+        const atendimentoCreated = await atendimentoModel.insertAtendimento({ atividade, insumo, id_funcionario, data_agendada, status_atendimento, comentario });
 
         res.status(200).json({ message: 'Atividade Criada ' });
     } catch (e) {
-        res.status(500).json({ message:  'Erro' });
+        res.status(500).json({ message: 'Erro' });
     }
 }
 
 
 
-   // update atualiza dados do cadastro
-const  update = async (req, res) => {
+// update atualiza dados do cadastro
+const update = async (req, res) => {
     const { id } = req.params;
-    const { atividade, insumo, id_funcionario, data_agendada, status_atendimento, comentario } = req.body;
+    // const { atividade, insumo, id_funcionario, data_agendada, status_atendimento, comentario } = req.body;
     try {
-         await atendimentoModel.updateAtendimento({id:id , atividade:atividade, insumo:insumo, id_funcionario:id_funcionario, data_agendada:data_agendada, status_atendimento:status_atendimento, comentario:comentario });
+        console.log('pass1');
+        const atendimento = await atendimentoModel.selectAtendimento(id);
+        console.log('atendimento',atendimento);
+        atendimento.status_atendimento = req.body.status_atendimento
+        await atendimentoModel.updateAtendimento(atendimento);
         res.status(200).json({ message: 'atendimento updated - ok ' });
     } catch (e) {
         res.status(500).json({ message: e });
@@ -57,12 +62,12 @@ const  update = async (req, res) => {
 
 
 router
-    .get("/atendimento" ,getAll)
+    .get("/atendimento", getAll)
     // .get("/atendimento/:id",SecurityUtils.verifyJWT , get)
     .post("/atendimento", createAtendimento)
     // .post("/atendimento/login", login)
-     .put("/atendimento/:id", update)
-    // .delete("/atendimento/:id", remove)
-    // .delete("/atendimento/email/:email", removemail);
+    .put("/atendimento/:id", update)
+// .delete("/atendimento/:id", remove)
+// .delete("/atendimento/email/:email", removemail);
 
 module.exports = router;
